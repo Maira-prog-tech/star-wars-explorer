@@ -40,7 +40,7 @@ export const fetchCharacters = createAsyncThunk(
   }
 );
 
-export const fetchCharacterById = createAsyncThunk(
+export const fetchCharacterById = createAsyncThunk<Character, string, { rejectValue: string }>(
   'characters/fetchCharacterById',
   async (id: string, { rejectWithValue }) => {
     try {
@@ -48,11 +48,7 @@ export const fetchCharacterById = createAsyncThunk(
       const response = await charactersApi.getById(id);
       console.log('Fetched character response:', response.data);
       if (Array.isArray(response.data)) {
-  return {
-    count: response.data.length,
-    results: response.data,
-    page: 1
-  };
+  return response.data[0];
 }
 return response.data;
     } catch (error: unknown) {

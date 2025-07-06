@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import type { PlanetsState } from '../../types';
+import type { PlanetsState, Planet } from '../../types';
 import { planetsApi } from '../../services/api';
 
 const initialState: PlanetsState = {
@@ -37,7 +37,7 @@ export const fetchPlanets = createAsyncThunk(
   }
 );
 
-export const fetchPlanetById = createAsyncThunk(
+export const fetchPlanetById = createAsyncThunk<Planet, string, { rejectValue: string }>(
   'planets/fetchPlanetById',
   async (id: string, { rejectWithValue }) => {
     try {
@@ -45,11 +45,7 @@ export const fetchPlanetById = createAsyncThunk(
       const response = await planetsApi.getById(id);
       console.log('Fetched planet response:', response.data);
       if (Array.isArray(response.data)) {
-  return {
-    count: response.data.length,
-    results: response.data,
-    page: 1
-  };
+  return response.data[0];
 }
 return response.data;
     } catch (error: any) {

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import type { StarshipsState } from '../../types';
+import type { StarshipsState, Starship } from '../../types';
 import { starshipsApi } from '../../services/api';
 
 const initialState: StarshipsState = {
@@ -36,7 +36,7 @@ export const fetchStarships = createAsyncThunk(
   }
 );
 
-export const fetchStarshipById = createAsyncThunk(
+export const fetchStarshipById = createAsyncThunk<Starship, string, { rejectValue: string }>(
   'starships/fetchStarshipById',
   async (id: string, { rejectWithValue }) => {
     try {
@@ -44,11 +44,7 @@ export const fetchStarshipById = createAsyncThunk(
       const response = await starshipsApi.getById(id);
       console.log('Fetched starship response:', response.data);
       if (Array.isArray(response.data)) {
-  return {
-    count: response.data.length,
-    results: response.data,
-    page: 1
-  };
+  return response.data[0];
 }
 return response.data;
     } catch (error: any) {
