@@ -1,4 +1,4 @@
-// API Response Types
+
 export interface ApiResponse<T> {
   count: number;
   next: string | null;
@@ -6,7 +6,6 @@ export interface ApiResponse<T> {
   results: T[];
 }
 
-// Character Types
 export interface Character {
   name: string;
   height: string;
@@ -26,7 +25,6 @@ export interface Character {
   url: string;
 }
 
-// Planet Types
 export interface Planet {
   name: string;
   rotation_period: string;
@@ -44,7 +42,6 @@ export interface Planet {
   url: string;
 }
 
-// Starship Types
 export interface Starship {
   name: string;
   model: string;
@@ -66,7 +63,6 @@ export interface Starship {
   url: string;
 }
 
-// Film Types
 export interface Film {
   title: string;
   episode_id: number;
@@ -84,15 +80,8 @@ export interface Film {
   url: string;
 }
 
-// Redux State Types
-export interface LoadingState {
-  idle: 'idle';
-  loading: 'loading';
-  success: 'success';
-  error: 'error';
-}
 
-export type LoadingStatus = keyof LoadingState;
+export type LoadingStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface PaginationState {
   currentPage: number;
@@ -105,7 +94,7 @@ export interface SearchState {
   results: any[];
 }
 
-// Store State Types
+
 export interface CharactersState {
   items: Character[];
   currentItem: Character | null;

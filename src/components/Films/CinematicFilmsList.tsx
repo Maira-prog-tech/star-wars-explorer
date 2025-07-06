@@ -24,14 +24,26 @@ import ErrorMessage from '../Common/ErrorMessage';
 const CinematicFilmsList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, status, error } = useAppSelector((state: RootState) => (state.films as any));
+  const { films: items, status, error } = useAppSelector((state: RootState) => state.films) as {
+    films: {
+      episode_id: number;
+      title: string;
+      director: string;
+      producer: string;
+      release_date: string;
+      opening_crawl: string;
+      url: string;
+    }[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null;
+  };
   const [currentFilm, setCurrentFilm] = useState(0);
 
   useEffect(() => {
     const loadAllFilms = async () => {
       if (items.length === 0) {
-        // Загружаем все фильмы (всего 1 страница)
-        await dispatch(fetchFilms());
+        
+        await dispatch(fetchFilms({}));
       }
     };
     loadAllFilms();
@@ -46,11 +58,11 @@ const CinematicFilmsList: React.FC = () => {
     'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop', // Dark space
   ];
 
-  if (status === 'loading' && items.length === 0) {
+  if (status === 'loading') {
     return <LoadingSpinner message="Loading films..." />;
   }
 
-  if (status === 'failed' as any) {
+  if (status === 'failed') {
     return <ErrorMessage message={error || 'Failed to load films'} />;
   }
 
@@ -65,11 +77,11 @@ const CinematicFilmsList: React.FC = () => {
       width: '100%',
       position: 'relative',
     }}>
-      {/* Navigation Menu */}
+     
       <Box sx={{ position: 'fixed', top: 32, left: 32, zIndex: 1000 }}>
         <IconButton 
           sx={{ color: '#FF6B35', fontSize: '1.5rem' }}
-          onClick={() => navigate('/')}
+          onClick={() => { console.log('Back button clicked'); navigate('/'); }}
         >
           <ArrowBack fontSize="large" />
         </IconButton>
@@ -78,13 +90,13 @@ const CinematicFilmsList: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Film Navigation */}
+      
       <Box sx={{ position: 'fixed', top: '50%', right: 32, transform: 'translateY(-50%)', zIndex: 1000 }}>
-        {items.map((_: any, index: number) => (
+        {items.map((_: { episode_id: number; title: string; director: string; producer: string; release_date: string; opening_crawl: string; url: string }, index: number) => (
           <Box 
             key={index} 
             sx={{ mb: 3, textAlign: 'center', cursor: 'pointer' }}
-            onClick={() => setCurrentFilm(index)}
+            onClick={() => { console.log(`Film navigation button ${index} clicked`); setCurrentFilm(index); }}
           >
             <Box sx={{ 
               width: 8, 
@@ -101,7 +113,7 @@ const CinematicFilmsList: React.FC = () => {
         ))}
       </Box>
 
-      {/* Hero Film Section */}
+      
       <Box sx={{ 
         position: 'relative',
         height: 'calc(100vh - 128px)',
@@ -114,7 +126,7 @@ const CinematicFilmsList: React.FC = () => {
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}>
-        {/* Orange accent line */}
+       
         <Box sx={{
           position: 'absolute',
           top: '20%',
@@ -126,7 +138,7 @@ const CinematicFilmsList: React.FC = () => {
         
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '80vh' }}>
-            {/* Left Content */}
+           
             <Box sx={{ flex: 1, pr: { md: 8 } }}>
               {currentFilmData && (
                 <Fade in timeout={1000} key={currentFilm}>
@@ -219,6 +231,7 @@ const CinematicFilmsList: React.FC = () => {
                             },
                             transition: 'all 0.3s ease',
                           }}
+                          onClick={() => {navigate(`/film/${currentFilmData.url.split('/').filter(Boolean).pop()}`)}}
                         >
                           VIEW DETAILS
                         </Button>
@@ -241,10 +254,7 @@ const CinematicFilmsList: React.FC = () => {
                             },
                             transition: 'all 0.3s ease',
                           }}
-                          onClick={() => {
-                            const element = document.getElementById('all-films');
-                            element?.scrollIntoView({ behavior: 'smooth' });
-                          }}
+                          onClick={() => { console.log('View all button clicked'); const element = document.getElementById('all-films'); element?.scrollIntoView({ behavior: 'smooth' }); }}
                         >
                           VIEW ALL ({items.length})
                         </Button>
@@ -252,7 +262,7 @@ const CinematicFilmsList: React.FC = () => {
                       
                       <IconButton 
                         sx={{ color: '#8B949E' }}
-                        onClick={() => setCurrentFilm((prev) => (prev + 1) % items.length)}
+                        onClick={() => { console.log('Next film button clicked'); setCurrentFilm((prev) => (prev + 1) % items.length); }}
                       >
                         <ArrowForward />
                       </IconButton>
@@ -264,7 +274,7 @@ const CinematicFilmsList: React.FC = () => {
           </Box>
         </Container>
         
-        {/* Progress Bar */}
+        
         <Box sx={{ position: 'absolute', bottom: 32, left: 32, right: 32 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography sx={{ color: '#FF6B35', fontSize: '0.8rem', fontWeight: 700 }}>
@@ -286,7 +296,7 @@ const CinematicFilmsList: React.FC = () => {
         </Box>
       </Box>
 
-      {/* All Films Grid */}
+      
       <Box id="all-films" sx={{ py: 8, background: 'linear-gradient(135deg, #0D1117 0%, #161B22 100%)' }}>
         <Container maxWidth="lg">
           <Typography 
@@ -314,7 +324,7 @@ const CinematicFilmsList: React.FC = () => {
               gap: 3,
             }}
           >
-            {items.map((film: any, index: number) => (
+            {items.map((film: { episode_id: number; title: string; director: string; producer: string; release_date: string; opening_crawl: string; url: string }, index: number) => (
               <Fade key={film.url} in timeout={1000 + index * 100}>
                 <Card
                   sx={{
@@ -334,7 +344,7 @@ const CinematicFilmsList: React.FC = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  <CardActionArea 
+                  <CardActionArea onClick={() => navigate(`/film/${film.url.split('/').filter(Boolean).pop()}`)} 
                     sx={{ 
                       height: '100%', 
                       background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.7) 0%, rgba(33, 38, 45, 0.5) 100%)',

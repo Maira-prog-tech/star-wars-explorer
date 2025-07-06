@@ -33,7 +33,7 @@ const CinematicStarshipsList: React.FC = () => {
   useEffect(() => {
     const loadAllStarships = async () => {
       if (items.length === 0) {
-        // Загружаем все страницы звездолетов
+        
         for (let page = 1; page <= 4; page++) {
           await dispatch(fetchStarships({ page }));
         }
@@ -379,7 +379,7 @@ const CinematicStarshipsList: React.FC = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  <CardActionArea 
+                  <CardActionArea onClick={() => navigate(`/starship/${starship.url.split('/').filter(Boolean).pop()}`)} 
                     sx={{ 
                       height: '100%', 
                       background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.7) 0%, rgba(33, 38, 45, 0.5) 100%)',

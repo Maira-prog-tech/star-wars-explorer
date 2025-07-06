@@ -58,7 +58,7 @@ const Home: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: '80vh' }}>
-      {/* Hero Section */}
+      
       <Container maxWidth="lg">
         <Fade in timeout={1000}>
           <Box sx={{ textAlign: 'center', py: 8 }}>
@@ -131,7 +131,7 @@ const Home: React.FC = () => {
           </Box>
         </Fade>
 
-        {/* Categories Grid */}
+        
         <Box 
           sx={{
             display: 'grid',
@@ -210,7 +210,7 @@ const Home: React.FC = () => {
           ))}
         </Box>
 
-        {/* Quote Section */}
+       
         <Fade in timeout={2000}>
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <Typography 

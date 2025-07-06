@@ -92,7 +92,7 @@ const CinematicHome: React.FC = () => {
       width: '100%',
       position: 'relative',
     }}>
-      {/* Navigation Menu */}
+      
       <Box sx={{ position: 'fixed', top: 32, left: 32, zIndex: 1000 }}>
         <IconButton sx={{ color: '#FFE81F', fontSize: '1.5rem' }}>
           <MenuIcon fontSize="large" />
@@ -102,7 +102,7 @@ const CinematicHome: React.FC = () => {
         </Typography>
       </Box>
       
-      {/* Episode Navigation */}
+      
       <Box sx={{ position: 'fixed', top: '50%', right: 32, transform: 'translateY(-50%)', zIndex: 1000 }}>
         {['01', '02', '03', '04', '05', '06'].map((num, index) => (
           <Box key={num} sx={{ mb: 3, textAlign: 'center', cursor: 'pointer' }}>
@@ -121,7 +121,7 @@ const CinematicHome: React.FC = () => {
         ))}
       </Box>
 
-      {/* Hero Section */}
+      
       <Box sx={{ 
         position: 'relative',
         height: '100vh',
@@ -132,7 +132,7 @@ const CinematicHome: React.FC = () => {
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}>
-        {/* Blue accent line */}
+       
         <Box sx={{
           position: 'absolute',
           top: '20%',
@@ -144,7 +144,7 @@ const CinematicHome: React.FC = () => {
         
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '80vh' }}>
-            {/* Left Content */}
+            
             <Box sx={{ flex: 1, pr: { md: 8 } }}>
               <Fade in timeout={1000} key={currentHero}>
                 <Box>
@@ -230,7 +230,7 @@ const CinematicHome: React.FC = () => {
           </Box>
         </Container>
         
-        {/* Progress Bar */}
+        
         <Box sx={{ position: 'absolute', bottom: 32, left: 32, right: 32 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography sx={{ color: '#FFE81F', fontSize: '0.8rem', fontWeight: 700 }}>
@@ -252,7 +252,7 @@ const CinematicHome: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Categories Section */}
+     
       <Box sx={{ py: 8, background: 'linear-gradient(135deg, #0D1117 0%, #161B22 100%)' }}>
         <Container maxWidth="lg">
           <Box 

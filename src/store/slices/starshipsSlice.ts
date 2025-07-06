@@ -18,23 +18,43 @@ const initialState: StarshipsState = {
   },
 };
 
-// Async thunks
 export const fetchStarships = createAsyncThunk(
   'starships/fetchStarships',
-  async ({ page, search }: { page?: number; search?: string }) => {
-    const response = await starshipsApi.getAll(page, search);
-    return {
-      data: response.data,
-      page: page || 1,
-    };
+  async ({ page, search }: { page?: number; search?: string }, { rejectWithValue }) => {
+    try {
+      console.log('Fetching starships with page:', page, 'search:', search);
+      const response = await starshipsApi.getAll(page, search);
+      console.log('Fetched starships response:', response.data);
+      return {
+        ...response.data,
+        page: page || 1,
+      };
+    } catch (error: any) {
+      console.error('Error fetching starships:', error as Error);
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const fetchStarshipById = createAsyncThunk(
   'starships/fetchStarshipById',
-  async (id: string) => {
-    const response = await starshipsApi.getById(id);
-    return response.data;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      console.log('Fetching starship by ID:', id);
+      const response = await starshipsApi.getById(id);
+      console.log('Fetched starship response:', response.data);
+      if (Array.isArray(response.data)) {
+  return {
+    count: response.data.length,
+    results: response.data,
+    page: 1
+  };
+}
+return response.data;
+    } catch (error: any) {
+      console.error('Error fetching starship by ID:', error as Error);
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
@@ -54,39 +74,38 @@ const starshipsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch starships
       .addCase(fetchStarships.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchStarships.fulfilled, (state, action) => {
-        state.status = 'success';
-        // Добавляем новые звездолеты к существующим
-        const newStarships = action.payload.data.results.filter(
+        state.status = 'succeeded';
+     
+        const results = action.payload.results || [];
+        const newStarships = results.filter(
           (newStarship: any) => !state.items.some((existingStarship: any) => existingStarship.url === newStarship.url)
         );
         state.items = [...state.items, ...newStarships];
         state.pagination = {
           currentPage: action.payload.page,
-          totalPages: Math.ceil(action.payload.data.count / 10),
-          totalCount: action.payload.data.count,
+          totalPages: Math.ceil((action.payload.count || 0) / 10),
+          totalCount: action.payload.count || 0,
         };
       })
       .addCase(fetchStarships.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch starships';
       })
-      // Fetch starship by ID
       .addCase(fetchStarshipById.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchStarshipById.fulfilled, (state, action) => {
-        state.status = 'success';
+        state.status = 'succeeded';
         state.currentItem = action.payload;
       })
       .addCase(fetchStarshipById.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch starship';
       });
   },

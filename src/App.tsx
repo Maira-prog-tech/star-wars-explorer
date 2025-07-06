@@ -13,6 +13,7 @@ import CinematicPlanetsList from './components/Planets/CinematicPlanetsList';
 import PlanetDetail from './components/Planets/PlanetDetail';
 import CinematicStarshipsList from './components/Starships/CinematicStarshipsList';
 import StarshipDetail from './components/Starships/StarshipDetail';
+import FilmDetail from './components/Films/FilmDetail';
 import CinematicFilmsList from './components/Films/CinematicFilmsList';
 import NotFound from './components/NotFound/NotFound';
 
@@ -20,15 +21,15 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#FFE81F', // Star Wars yellow
+      main: '#FFE81F', 
       contrastText: '#000',
     },
     secondary: {
-      main: '#FF6B35', // Orange accent
+      main: '#FF6B35', 
     },
     background: {
-      default: '#0D1117', // Dark space background
-      paper: '#161B22', // Card background
+      default: '#0D1117', 
+      paper: '#161B22', 
     },
     text: {
       primary: '#F0F6FC',
@@ -98,6 +99,7 @@ function App() {
               <Route path="starships" element={<CinematicStarshipsList />} />
               <Route path="starship/:id" element={<StarshipDetail />} />
               <Route path="films" element={<CinematicFilmsList />} />
+              <Route path="film/:id" element={<FilmDetail />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

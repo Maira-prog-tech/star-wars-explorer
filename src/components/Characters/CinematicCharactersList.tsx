@@ -23,19 +23,16 @@ import ErrorMessage from '../Common/ErrorMessage';
 const CinematicCharactersList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, status, error } = useAppSelector((state) => state.characters);
+  const { status, error, items } = useAppSelector((state) => state.characters);
   const [currentCharacter, setCurrentCharacter] = useState(0);
 
   useEffect(() => {
-    const loadAllCharacters = async () => {
-      if (items.length === 0) {
-        // Загружаем все страницы персонажей
-        for (let page = 1; page <= 9; page++) {
-          await dispatch(fetchCharacters({ page }));
-        }
+    if (items.length === 0) {
+     
+      for (let page = 1; page <= 9; page++) {
+        dispatch(fetchCharacters({ page }));
       }
-    };
-    loadAllCharacters();
+    }
   }, [dispatch, items.length]);
 
   const featuredCharacters = items.slice(0, 6);
@@ -53,7 +50,7 @@ const CinematicCharactersList: React.FC = () => {
     return <LoadingSpinner message="Loading characters..." />;
   }
 
-  if (status === 'failed' as any) {
+  if (status === 'failed' as typeof status) {
     return <ErrorMessage message={error || 'Failed to load characters'} />;
   }
 
@@ -68,7 +65,7 @@ const CinematicCharactersList: React.FC = () => {
       width: '100%',
       position: 'relative',
     }}>
-      {/* Navigation Menu */}
+      
       <Box sx={{ position: 'fixed', top: 32, left: 32, zIndex: 1000 }}>
         <IconButton 
           sx={{ color: '#FFE81F', fontSize: '1.5rem' }}
@@ -81,7 +78,7 @@ const CinematicCharactersList: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Character Navigation */}
+      
       <Box sx={{ position: 'fixed', top: '50%', right: 32, transform: 'translateY(-50%)', zIndex: 1000 }}>
         {featuredCharacters.map((_, index) => (
           <Box 
@@ -104,7 +101,7 @@ const CinematicCharactersList: React.FC = () => {
         ))}
       </Box>
 
-      {/* Hero Character Section */}
+      
       <Box sx={{ 
         position: 'relative',
         height: 'calc(100vh - 128px)',
@@ -117,7 +114,7 @@ const CinematicCharactersList: React.FC = () => {
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
       }}>
-        {/* Blue accent line */}
+        
         <Box sx={{
           position: 'absolute',
           top: '20%',
@@ -129,7 +126,7 @@ const CinematicCharactersList: React.FC = () => {
         
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '80vh' }}>
-            {/* Left Content */}
+            
             <Box sx={{ flex: 1, pr: { md: 8 } }}>
               {currentChar && (
                 <Fade in timeout={1000} key={currentCharacter}>
@@ -289,7 +286,7 @@ const CinematicCharactersList: React.FC = () => {
         </Box>
       </Box>
 
-      {/* All Characters Grid */}
+      
       <Box id="all-characters" sx={{ py: 8, background: 'linear-gradient(135deg, #0D1117 0%, #161B22 100%)' }}>
         <Container maxWidth="lg">
           <Typography 
@@ -383,7 +380,7 @@ const CinematicCharactersList: React.FC = () => {
             <Box sx={{ textAlign: 'center', mt: 6 }}>
               <Button
                 variant="outlined"
-                onClick={() => navigate('/characters')}
+                onClick={() => { console.log('View All Characters button clicked'); navigate('/characters'); }}
                 sx={{
                   px: 4,
                   py: 1.5,

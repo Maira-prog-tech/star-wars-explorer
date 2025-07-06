@@ -24,9 +24,9 @@ const CharacterDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const character = useAppSelector((state: RootState) => (state.characters as any).currentItem);
-  const status = useAppSelector((state: RootState) => (state.characters as any).status);
-  const error = useAppSelector((state: RootState) => (state.characters as any).error);
+  const character = useAppSelector((state: RootState) => state.characters.currentItem);
+  const status = useAppSelector((state: RootState) => state.characters.status);
+  const error = useAppSelector((state: RootState) => state.characters.error as string | null);
 
   useEffect(() => {
     if (id) {

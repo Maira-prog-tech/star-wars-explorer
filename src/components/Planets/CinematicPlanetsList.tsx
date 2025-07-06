@@ -24,13 +24,13 @@ import ErrorMessage from '../Common/ErrorMessage';
 const CinematicPlanetsList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, status, error } = useAppSelector((state: RootState) => (state.planets as any));
+  const { items, status, error } = useAppSelector((state: RootState) => state.planets);
   const [currentPlanet, setCurrentPlanet] = useState(0);
 
   useEffect(() => {
     const loadAllPlanets = async () => {
       if (items.length === 0) {
-        // Загружаем все страницы планет
+        
         for (let page = 1; page <= 6; page++) {
           await dispatch(fetchPlanets({ page }));
         }
@@ -54,7 +54,7 @@ const CinematicPlanetsList: React.FC = () => {
     return <LoadingSpinner message="Loading planets..." />;
   }
 
-  if (status === 'failed' as any) {
+  if ((status as string) === 'failed') {
     return <ErrorMessage message={error || 'Failed to load planets'} />;
   }
 
@@ -73,7 +73,7 @@ const CinematicPlanetsList: React.FC = () => {
       <Box sx={{ position: 'fixed', top: 32, left: 32, zIndex: 1000 }}>
         <IconButton 
           sx={{ color: '#4FC3F7', fontSize: '1.5rem' }}
-          onClick={() => navigate('/')}
+          onClick={() => { console.log('Back button clicked'); navigate('/'); }}
         >
           <ArrowBack fontSize="large" />
         </IconButton>
@@ -88,7 +88,7 @@ const CinematicPlanetsList: React.FC = () => {
           <Box 
             key={index} 
             sx={{ mb: 3, textAlign: 'center', cursor: 'pointer' }}
-            onClick={() => setCurrentPlanet(index)}
+            onClick={() => { console.log(`Planet ${index} clicked`); setCurrentPlanet(index); }}
           >
             <Box sx={{ 
               width: 8, 
@@ -222,6 +222,7 @@ const CinematicPlanetsList: React.FC = () => {
                             },
                             transition: 'all 0.3s ease',
                           }}
+                          onClick={() => { console.log('View details button clicked'); /* existing onClick code */ }}
                         >
                           VIEW DETAILS
                         </Button>
@@ -244,10 +245,7 @@ const CinematicPlanetsList: React.FC = () => {
                             },
                             transition: 'all 0.3s ease',
                           }}
-                          onClick={() => {
-                            const element = document.getElementById('all-planets');
-                            element?.scrollIntoView({ behavior: 'smooth' });
-                          }}
+                          onClick={() => { console.log('View all button clicked'); const element = document.getElementById('all-planets'); element?.scrollIntoView({ behavior: 'smooth' }); }}
                         >
                           VIEW ALL ({items.length})
                         </Button>
@@ -255,7 +253,7 @@ const CinematicPlanetsList: React.FC = () => {
                       
                       <IconButton 
                         sx={{ color: '#8B949E' }}
-                        onClick={() => setCurrentPlanet((prev) => (prev + 1) % featuredPlanets.length)}
+                        onClick={() => { console.log('Next planet button clicked'); setCurrentPlanet((prev) => (prev + 1) % featuredPlanets.length); }}
                       >
                         <ArrowForward />
                       </IconButton>
@@ -339,7 +337,7 @@ const CinematicPlanetsList: React.FC = () => {
                   }}
                 >
                   <CardActionArea 
-                    onClick={() => navigate(`/planet/${planet.url.split('/').slice(-2, -1)[0]}`)}
+                    onClick={() => { console.log('Planet card clicked'); navigate(`/planet/${planet.url.split('/').slice(-2, -1)[0]}`); }}
                     sx={{ 
                       height: '100%', 
                       background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.7) 0%, rgba(33, 38, 45, 0.5) 100%)',
@@ -383,7 +381,7 @@ const CinematicPlanetsList: React.FC = () => {
             <Box sx={{ textAlign: 'center', mt: 6 }}>
               <Button
                 variant="outlined"
-                onClick={() => navigate('/planets')}
+                onClick={() => { console.log('View all planets button clicked'); navigate('/planets'); }}
                 sx={{
                   px: 4,
                   py: 1.5,

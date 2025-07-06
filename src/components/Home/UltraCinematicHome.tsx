@@ -128,7 +128,7 @@ const UltraCinematicHome: React.FC = () => {
     onMouseEnter={stopAutoSlide}
     onMouseLeave={startAutoSlide}
     >
-      {/* Background with Parallax Effect */}
+      
       <Box sx={{
         position: 'absolute',
         top: '-10%',
@@ -144,7 +144,7 @@ const UltraCinematicHome: React.FC = () => {
         zIndex: 1,
       }} />
 
-      {/* Cinematic Bars */}
+      
       <Box sx={{
         position: 'absolute',
         top: 0,
@@ -219,7 +219,7 @@ const UltraCinematicHome: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Main Content Area */}
+      
       <Box sx={{
         position: 'absolute',
         top: '50%',
@@ -230,7 +230,7 @@ const UltraCinematicHome: React.FC = () => {
       }}>
         <Fade in={!isTransitioning} timeout={800}>
           <Box>
-            {/* Category Badge */}
+            
             <Box sx={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -265,7 +265,7 @@ const UltraCinematicHome: React.FC = () => {
               </Typography>
             </Box>
             
-            {/* Episode Info */}
+            
             <Typography sx={{
               fontSize: { xs: '0.8rem', md: '1rem' },
               fontWeight: 700,
@@ -277,7 +277,7 @@ const UltraCinematicHome: React.FC = () => {
               {currentSlideData.subtitle}
             </Typography>
             
-            {/* Main Title */}
+            
             <Typography sx={{
               fontSize: { xs: '3rem', md: '5rem', lg: '7rem' },
               fontWeight: 900,

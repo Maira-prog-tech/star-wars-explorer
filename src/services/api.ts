@@ -1,82 +1,101 @@
 import axios from 'axios';
 import type { ApiResponse, Character, Planet, Starship, Film } from '../types';
 
-const BASE_URL = '/api';
+const BASE_URL = 'https://corsproxy.io/?https://swapi.py4e.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 15000,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
-  // Handle potential SSL issues in development
-  validateStatus: function (status) {
-    return status >= 200 && status < 300;
-  },
 });
 
-// Helper function to extract ID from URL
+api.interceptors.response.use(
+  response => {
+    console.log('API Success:', response.config.url, response.status);
+    return response;
+  },
+  error => {
+    console.error('API Error Details:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    return Promise.reject(error);
+  }
+);
+
 export const extractIdFromUrl = (url: string): string => {
   const matches = url.match(/\/(\d+)\/$/);
   return matches ? matches[1] : '1';
 };
 
-// Characters API
 export const charactersApi = {
   getAll: (page: number = 1, search?: string) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
-    if (search) {
-      params.append('search', search);
+    if (search && search.trim()) {
+      params.append('search', search.trim());
     }
-    return api.get<ApiResponse<Character>>(`/people/?${params.toString()}`);
+    
+    console.log('Fetching characters:', `/people/?${params.toString()}`);
+    return api.get<ApiResponse<Character>>(`/people/?${params.toString()}`).catch(error => { console.error('Error in characters getAll', error); throw error; });
   },
-  
   getById: (id: string) => {
-    return api.get<Character>(`/people/${id}/`);
+    console.log('Fetching character by id:', `/people/${id}/`);
+    return api.get<Character>(`/people/${id}/`).catch(error => { console.error('Error in characters getById', error); throw error; });
   },
 };
 
-// Planets API
 export const planetsApi = {
   getAll: (page: number = 1, search?: string) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
-    if (search) {
-      params.append('search', search);
+    if (search && search.trim()) {
+      params.append('search', search.trim());
     }
-    return api.get<ApiResponse<Planet>>(`/planets/?${params.toString()}`);
+    
+    console.log('Fetching planets:', `/planets/?${params.toString()}`);
+    return api.get<ApiResponse<Planet>>(`/planets/?${params.toString()}`).catch(error => { console.error('Error in planets getAll', error); throw error; });
   },
-  
   getById: (id: string) => {
-    return api.get<Planet>(`/planets/${id}/`);
+    console.log('Fetching planet by id:', `/planets/${id}/`);
+    return api.get<Planet>(`/planets/${id}/`).catch(error => { console.error('Error in planets getById', error); throw error; });
   },
 };
 
-// Starships API
 export const starshipsApi = {
   getAll: (page: number = 1, search?: string) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
-    if (search) {
-      params.append('search', search);
+    if (search && search.trim()) {
+      params.append('search', search.trim());
     }
-    return api.get<ApiResponse<Starship>>(`/starships/?${params.toString()}`);
+    
+    console.log('Fetching starships:', `/starships/?${params.toString()}`);
+    return api.get<ApiResponse<Starship>>(`/starships/?${params.toString()}`).catch(error => { console.error('Error in starships getAll', error); throw error; });
   },
-  
   getById: (id: string) => {
-    return api.get<Starship>(`/starships/${id}/`);
+    console.log('Fetching starship by id:', `/starships/${id}/`);
+    return api.get<Starship>(`/starships/${id}/`).catch(error => { console.error('Error in starships getById', error); throw error; });
   },
 };
 
-// Films API
 export const filmsApi = {
-  getAll: () => {
-    return api.get<ApiResponse<Film>>('/films/');
+  getAll: (page: number = 1, search?: string) => {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    if (search && search.trim()) {
+      params.append('search', search.trim());
+    }
+    console.log('Fetching films:', `/films/?${params.toString()}`);
+    return api.get<ApiResponse<Film>>(`/films/?${params.toString()}`).catch(error => { console.error('Error in films getAll', error); throw error; });
   },
-  
   getById: (id: string) => {
-    return api.get<Film>(`/films/${id}/`);
+    console.log('Fetching film by id:', `/films/${id}/`);
+    return api.get<Film>(`/films/${id}/`).catch(error => { console.error('Error in films getById', error); throw error; });
   },
 };
 

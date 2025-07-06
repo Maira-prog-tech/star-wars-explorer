@@ -1,7 +1,6 @@
-// Simple API test
+
 const https = require('https');
 
-// Create an agent that ignores SSL certificate errors
 const agent = new https.Agent({
   rejectUnauthorized: false
 });

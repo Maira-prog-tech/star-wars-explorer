@@ -72,7 +72,7 @@ const FullscreenCinematicHome: React.FC = () => {
       marginLeft: '-50vw',
       marginRight: '-50vw',
     }}>
-      {/* Background Video/Image */}
+      
       <Box sx={{
         position: 'absolute',
         top: 0,
@@ -86,7 +86,7 @@ const FullscreenCinematicHome: React.FC = () => {
         zIndex: 1,
       }} />
 
-      {/* Top Navigation */}
+      
       <Box sx={{
         position: 'absolute',
         top: 0,
@@ -117,7 +117,7 @@ const FullscreenCinematicHome: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Main Content */}
+     
       <Box sx={{
         position: 'absolute',
         top: '50%',
@@ -215,7 +215,7 @@ const FullscreenCinematicHome: React.FC = () => {
         </Fade>
       </Box>
 
-      {/* Side Navigation */}
+      
       <Box sx={{
         position: 'absolute',
         right: '5%',
@@ -258,7 +258,7 @@ const FullscreenCinematicHome: React.FC = () => {
         ))}
       </Box>
 
-      {/* Bottom Controls */}
+      
       <Box sx={{
         position: 'absolute',
         bottom: 0,
@@ -317,7 +317,7 @@ const FullscreenCinematicHome: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Decorative Elements */}
+      
       <Box sx={{
         position: 'absolute',
         top: '20%',

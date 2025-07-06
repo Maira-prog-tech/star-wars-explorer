@@ -18,15 +18,16 @@ import ErrorMessage from '../Common/ErrorMessage';
 import SearchBar from '../Common/SearchBar';
 import Pagination from '../Common/Pagination';
 import type { RootState } from '../../store';
+import type { Character } from '../../types'; 
 
 const CharactersList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const items = useAppSelector((state: RootState) => (state.characters as any).items);
-  const status = useAppSelector((state: RootState) => (state.characters as any).status);
-  const error = useAppSelector((state: RootState) => (state.characters as any).error);
-  const pagination = useAppSelector((state: RootState) => (state.characters as any).pagination);
-  const search = useAppSelector((state: RootState) => (state.characters as any).search);
+  const items = useAppSelector((state: RootState) => state.characters.items as Character[]);
+  const status = useAppSelector((state: RootState) => state.characters.status);
+  const error = useAppSelector((state: RootState) => state.characters.error as string | null);
+  const pagination = useAppSelector((state: RootState) => state.characters.pagination);
+  const search = useAppSelector((state: RootState) => state.characters.search as { query: string });
 
   const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
@@ -106,7 +107,7 @@ const CharactersList: React.FC = () => {
         <ErrorMessage message={error} onRetry={handleRetry} />
       )}
 
-      {status === 'success' && items.length === 0 && (
+      {status === 'succeeded' && items.length === 0 && (
         <Box textAlign="center" py={8}>
           <Typography variant="h6" color="text.secondary">
             {search.query ? 'No characters found in this galaxy...' : 'No characters found'}
@@ -126,7 +127,7 @@ const CharactersList: React.FC = () => {
           mb: 4,
         }}
       >
-        {items.map((character: any) => (
+        {items.map((character: Character) => (
           <Card 
             key={character.url}
             sx={{ 

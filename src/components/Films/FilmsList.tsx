@@ -16,20 +16,20 @@ import type { RootState } from '../../store';
 
 const FilmsList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const items = useAppSelector((state: RootState) => (state.films as any).items);
-  const status = useAppSelector((state: RootState) => (state.films as any).status);
-  const error = useAppSelector((state: RootState) => (state.films as any).error);
+  const items = useAppSelector((state: RootState) => state.films.films);
+  const status = useAppSelector((state: RootState) => state.films.status);
+  const error = useAppSelector((state: RootState) => state.films.error);
 
   useEffect(() => {
     console.log('FilmsList: Dispatching fetchFilms');
-    dispatch(fetchFilms());
+    dispatch(fetchFilms({}));
   }, [dispatch]);
 
-  // Debug logging
+ 
   console.log('FilmsList render:', { items, status, error });
 
   const handleRetry = () => {
-    dispatch(fetchFilms());
+    dispatch(fetchFilms({}));
   };
 
   const sortedFilms = [...items].sort((a, b) => a.episode_id - b.episode_id);
@@ -63,7 +63,7 @@ const FilmsList: React.FC = () => {
         <ErrorMessage message={error} onRetry={handleRetry} />
       )}
 
-      {status === 'success' && items.length === 0 && (
+      {status === 'succeeded' && items.length === 0 && (
         <Box textAlign="center" py={8}>
           <Typography variant="h6" color="text.secondary">
             No films found in a galaxy far, far away...

@@ -18,23 +18,44 @@ const initialState: PlanetsState = {
   },
 };
 
-// Async thunks
+
 export const fetchPlanets = createAsyncThunk(
   'planets/fetchPlanets',
-  async ({ page, search }: { page?: number; search?: string }) => {
-    const response = await planetsApi.getAll(page, search);
-    return {
-      data: response.data,
-      page: page || 1,
-    };
+  async ({ page, search }: { page?: number; search?: string }, { rejectWithValue }) => {
+    try {
+      console.log('Fetching planets with page:', page, 'search:', search);
+      const response = await planetsApi.getAll(page, search);
+      console.log('Fetched planets response:', response.data);
+      return {
+        ...response.data,
+        page: page || 1,
+      };
+    } catch (error: any) {
+      console.error('Error fetching planets:', error as Error);
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const fetchPlanetById = createAsyncThunk(
   'planets/fetchPlanetById',
-  async (id: string) => {
-    const response = await planetsApi.getById(id);
-    return response.data;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      console.log('Fetching planet by ID:', id);
+      const response = await planetsApi.getById(id);
+      console.log('Fetched planet response:', response.data);
+      if (Array.isArray(response.data)) {
+  return {
+    count: response.data.length,
+    results: response.data,
+    page: 1
+  };
+}
+return response.data;
+    } catch (error: any) {
+      console.error('Error fetching planet by ID:', error as Error);
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
@@ -54,39 +75,40 @@ const planetsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch planets
+      
       .addCase(fetchPlanets.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchPlanets.fulfilled, (state, action) => {
-        state.status = 'success';
-        // Добавляем новые планеты к существующим
-        const newPlanets = action.payload.data.results.filter(
+        state.status = 'succeeded';
+       
+        const results = action.payload.results || [];
+        const newPlanets = results.filter(
           (newPlanet: any) => !state.items.some((existingPlanet: any) => existingPlanet.url === newPlanet.url)
         );
         state.items = [...state.items, ...newPlanets];
         state.pagination = {
           currentPage: action.payload.page,
-          totalPages: Math.ceil(action.payload.data.count / 10),
-          totalCount: action.payload.data.count,
+          totalPages: Math.ceil((action.payload.count || 0) / 10),
+          totalCount: action.payload.count || 0,
         };
       })
       .addCase(fetchPlanets.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch planets';
       })
-      // Fetch planet by ID
+      
       .addCase(fetchPlanetById.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchPlanetById.fulfilled, (state, action) => {
-        state.status = 'success';
+        state.status = 'succeeded';
         state.currentItem = action.payload;
       })
       .addCase(fetchPlanetById.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch planet';
       });
   },

@@ -28,7 +28,7 @@ const Navigation: React.FC = () => {
       borderBottom: '2px solid #30363D',
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
       position: 'fixed',
-      top: { xs: '56px', md: '64px' }, // Отступ под AppBar
+      top: { xs: '56px', md: '64px' }, 
       left: 0,
       right: 0,
       zIndex: 1200,

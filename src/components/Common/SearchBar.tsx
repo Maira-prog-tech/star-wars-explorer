@@ -25,10 +25,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Search button submitted with value:', localValue);
     onSearch(localValue);
   };
 
   const handleClear = () => {
+    console.log('Clear button clicked');
     setLocalValue('');
     onChange('');
     onSearch('');

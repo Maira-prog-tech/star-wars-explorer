@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import type { CharactersState } from '../../types';
+import type { CharactersState, Character } from '../../types';
 import { charactersApi } from '../../services/api';
 
 const initialState: CharactersState = {
@@ -18,23 +18,51 @@ const initialState: CharactersState = {
   },
 };
 
-// Async thunks
 export const fetchCharacters = createAsyncThunk(
   'characters/fetchCharacters',
-  async ({ page, search }: { page?: number; search?: string }) => {
-    const response = await charactersApi.getAll(page, search);
-    return {
-      data: response.data,
-      page: page || 1,
-    };
+  async ({ page, search }: { page?: number; search?: string }, { rejectWithValue }) => {
+    try {
+      console.log('Fetching characters with page:', page, 'search:', search);
+      const response = await charactersApi.getAll(page, search);
+      console.log('Fetched characters response:', response.data);
+      return {
+        ...response.data,
+        page: page || 1,
+      };
+    } catch (error: unknown) {
+      console.error('Error fetching characters:', error);
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      } else {
+        return rejectWithValue(String(error));
+      }
+    }
   }
 );
 
 export const fetchCharacterById = createAsyncThunk(
   'characters/fetchCharacterById',
-  async (id: string) => {
-    const response = await charactersApi.getById(id);
-    return response.data;
+  async (id: string, { rejectWithValue }) => {
+    try {
+      console.log('Fetching character by ID:', id);
+      const response = await charactersApi.getById(id);
+      console.log('Fetched character response:', response.data);
+      if (Array.isArray(response.data)) {
+  return {
+    count: response.data.length,
+    results: response.data,
+    page: 1
+  };
+}
+return response.data;
+    } catch (error: unknown) {
+      console.error('Error fetching character by ID:', error);
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      } else {
+        return rejectWithValue(String(error));
+      }
+    }
   }
 );
 
@@ -54,39 +82,37 @@ const charactersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch characters
+      
       .addCase(fetchCharacters.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
-        state.status = 'success';
-        // Добавляем новые персонажи к существующим
-        const newCharacters = action.payload.data.results.filter(
-          (newChar: any) => !state.items.some((existingChar: any) => existingChar.url === newChar.url)
-        );
+        state.status = 'succeeded';
+        const results = action.payload.results || [];
+        const newCharacters = results.filter((newChar: Character) => !state.items.some((existingChar: Character) => existingChar.url === newChar.url));
         state.items = [...state.items, ...newCharacters];
         state.pagination = {
           currentPage: action.payload.page,
-          totalPages: Math.ceil(action.payload.data.count / 10),
-          totalCount: action.payload.data.count,
+          totalPages: Math.ceil((action.payload.count || 0) / 10),
+          totalCount: action.payload.count || 0,
         };
       })
       .addCase(fetchCharacters.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch characters';
       })
-      // Fetch character by ID
+      
       .addCase(fetchCharacterById.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchCharacterById.fulfilled, (state, action) => {
-        state.status = 'success';
+        state.status = 'succeeded';
         state.currentItem = action.payload;
       })
       .addCase(fetchCharacterById.rejected, (state, action) => {
-        state.status = 'error';
+        state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch character';
       });
   },
